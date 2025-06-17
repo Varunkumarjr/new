@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources - Alumni Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+.resource-card {
+  /* Ensure child elements can shrink properly within flex/grid layouts */
+  min-width: 0;
+}
+
+.resource-card a,
+.resource-card p {
+  overflow-wrap: break-word;   /* allow breaking long words/URLs */
+  word-break: break-word;
+}
+
+.resource-card .text-content {
+  overflow: hidden;            /* clip any overflow */
+  display: -webkit-box;        /* for multi-line ellipsis support */
+  -webkit-line-clamp: 3;       /* limit to 3 lines */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #e3f2fd;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      padding: 15px;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-size: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: #0056b3;
+      border-radius: 4px;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #007bff, #6c757d);
+      color: white;
+      text-align: center;
+      padding: 80px 0;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero-section .btn {
+      background-color: #28a745;
+      color: white;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      padding: 12px 30px;
+      margin-top: 20px;
+    }
+
+    .resource-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .resource-card {
+      width: calc(33.33% - 20px);
+      height: 380px;
+      padding: 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .resource-card:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .resource-card h5 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .resource-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .resource-card iframe {
+    max-height: 250px;
+    width: 100%;
+    object-fit: cover; /* Keeps image from stretching */
+    border-radius: 5px;
+  }
+
+    
+
+    .resource-card a {
+      color: #007bff;
+      font-size: 1rem;
+    }
+
+    .resource-card a:hover {
+      text-decoration: underline;
+    }
+
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .modal-footer .btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .modal-footer .btn:hover {
+      background-color: #218838;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .form-label {
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .input-group input, .input-group button {
+      border-radius: 25px;
+      padding: 15px;
+    }
+
+    .input-group button {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">Alumni Connect</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="/friend.html">Chat</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resume.html">Resume</a></li>
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Resource Form Section -->
+  <div class="container mt-4">
+    <div class="mb-3">
+      <h2>Upload Resource</h2>
+      <form id="resource-form">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" id="resourceTitle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Upload File (Image/PDF)</label>
+          <input type="file" class="form-control" id="resourceFile" accept="image/*,application/pdf">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Or Add Link</label>
+          <input type="url" class="form-control" id="resourceLink">
+        </div>
+        <button type="submit" class="btn btn-success">Add Resource</button>
+      </form>
+    </div>
+
+    <div id="resourcesContainer" class="resource-container"></div>
+  </div>
+
+  <script>
+async function renderResources() {
+  const resp = await fetch('/api/resources');
+  const resources = await resp.json();
+  const container = document.getElementById('resourcesContainer');
+  container.innerHTML = '';
+
+  resources.forEach(res => {
+    const card = document.createElement('div');
+    card.className = 'resource-card';
+
+    let content = '';
+    if (res.type === 'image') {
+      content = `<img src="${res.data}" alt="${res.title}" style="max-width:100%;">`;
+    } else if (res.type === 'pdf') {
+      let pdfUrl = res.data;
+      content = `
+        <div class="iframe-container">
+          <iframe src="${pdfUrl}" width="100%" height="600" style="border:none;">
+            This browser does not support PDFs. 
+            <a href="${pdfUrl}" target="_blank">Download the PDF</a>.
+          </iframe>
+        </div>`;
+    } else if (res.type === 'link') {
+      content = `<a href="${res.data}" target="_blank">${res.data}</a>`;
+    }
+
+    card.innerHTML = `<h5>${res.title}</h5>${content}`;
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('resource-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const title = document.getElementById('resourceTitle').value;
+  const fileInput = document.getElementById('resourceFile');
+  const link = document.getElementById('resourceLink').value.trim();
+  const file = fileInput.files[0];
+
+  if (file) {
+    const formData = new FormData();
+    formData.append('resourceFile', file);
+    formData.append('title', title);
+    formData.append('type', file.type.startsWith('image') ? 'image' : 'pdf');
+    await fetch('/upload-resource', { method: 'POST', body: formData });
+  } else if (link) {
+    await fetch('/upload-resource-link', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ title, link })
+    });
+  } else {
+    alert('Please upload a file or add a link.');
+    return;
+  }
+
+  document.getElementById('resource-form').reset();
+  renderResources();
+});
+
+window.addEventListener('DOMContentLoaded', renderResources);
+</script>
+
+
+</body>
+</html>

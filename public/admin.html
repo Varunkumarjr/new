@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - myapp</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .delete-btn { background: #e8491d; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
+.media-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    height: 400px; /* Adjust this height based on your preference */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .media-card img,
+  .media-card iframe {
+    max-height: 250px;
+    width: 100%;
+    object-fit: cover; /* Keeps image from stretching */
+    border-radius: 5px;
+  }
+
+  .media-card h5 {
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .media-card p,
+  .media-card a {
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  iframe {
+    border: none;
+  }
+
+  .delete-btn {
+    align-self: flex-end;
+  }
+  </style>
+</head>
+<body style="display: none;" id="protectedBody">
+<script>
+  // Prompt user for login
+  const username = prompt("Enter Username:");
+  const password = prompt("Enter Password:");
+
+  if (username === "crazy" && password === "qwerty") {
+    document.getElementById("protectedBody").style.display = "block";
+  } else {
+    document.write(""); // Show blank page if credentials are wrong
+    // Or redirect to home: window.location.href = "/home";
+  }
+</script>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+ <a class="navbar-brand" href="/admin">ALUMNICONNECT</a>
+
+      <a class="navbar-brand" href="/home">Home</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+           
+            <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+
+          <li class="nav-item"><a class="nav-link" href="/friend">Chat</a></li>
+                     
+<li class="nav-item"><a class="nav-link" href="/resume.html"> Resume</a></li>
+<li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+
+
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <h2>Admin Panel</h2>
+    <div class="mb-4">
+      <h3>Users</h3>
+      <ul id="user-list" class="list-group"></ul>
+    </div>
+    <div class="mb-4">
+      <h3>Blogs</h3>
+      <ul id="blog-list-admin" class="list-group"></ul>
+    </div>
+    <div class="mb-4">
+
+           <ul id="group-list-admin" class="list-group"></ul>
+    </div>
+  </div>
+  <script>
+    function loadUsers() {
+      fetch('/api/users')
+        .then(res => res.json())
+        .then(users => {
+          const list = document.getElementById('user-list');
+          list.innerHTML = '';
+          users.forEach(user => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.textContent = `${user.username} (${user.email})`;
+            const btn = document.createElement('button');
+            btn.textContent = 'Delete';
+            btn.className = 'delete-btn';
+            btn.onclick = () => { fetch(`/api/users/${user.id}`, { method: 'DELETE' }).then(() => loadUsers()); };
+            li.appendChild(btn);
+            list.appendChild(li);
+          });
+        });
+    }
+    function loadBlogs() {
+      fetch('/api/blogs')
+        .then(res => res.json())
+        .then(blogs => {
+          const list = document.getElementById('blog-list-admin');
+          list.innerHTML = '';
+          blogs.forEach(blog => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.textContent = `${blog.username}: ${blog.content}`;
+            const btn = document.createElement('button');
+            btn.textContent = 'Delete';
+            btn.className = 'delete-btn';
+            btn.onclick = () => { fetch(`/api/blogs/${blog.id}`, { method: 'DELETE' }).then(() => loadBlogs()); };
+            li.appendChild(btn);
+            list.appendChild(li);
+          });
+        });
+    }
+    function loadGroups() {
+      fetch('/api/groups')
+        .then(res => res.json())
+        .then(groups => {
+          const list = document.getElementById('group-list-admin');
+          list.innerHTML = '';
+          groups.forEach(group => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.textContent = group.groupName;
+            const btn = document.createElement('button');
+            btn.textContent = 'Delete';
+            btn.className = 'delete-btn';
+            btn.onclick = () => { fetch(`/api/groups/${group.id}`, { method: 'DELETE' }).then(() => loadGroups()); };
+            li.appendChild(btn);
+            list.appendChild(li);
+          });
+        });
+    }
+    loadUsers();
+    loadBlogs();
+    loadGroups();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Panel - Delete Uploaded Media</h2>
+
+    <!-- Students Section -->
+    <div class="media-section">
+     
+      <div id="studentsContainer" class="row"></div>
+    </div>
+
+    <!-- Event Images Section -->
+    <div class="media-section">
+      <h4>Event Gallery Images</h4>
+      <div id="eventsContainer" class="row"></div>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="media-section">
+      <h4>Uploaded Resources</h4>
+      <div id="resourcesContainer" class="row"></div>
+    </div>
+  </div>
+
+  <script>
+  // Load students
+function loadStudents() {
+  fetch('/api/students') // Fetch students from the backend API
+    .then(res => res.json())
+    .then(students => {
+      const container = document.getElementById('studentsContainer');
+      container.innerHTML = ''; // Clear existing content
+      students.forEach(student => {
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
+            <img src="${student.photo}" alt="Student Photo">
+            <p><strong>${student.fullName}</strong></p>
+            <p>${student.email}</p>
+            <p>${student.phone}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    });
+}
+
+// Load events
+function loadEvents() {
+  fetch('/api/events') // Fetch events from the backend API
+    .then(res => res.json())
+    .then(events => {
+      const container = document.getElementById('eventsContainer');
+      container.innerHTML = ''; // Clear existing content
+      events.forEach(event => {
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteEvent(${event.id})">Delete</button>
+            <img src="${event.url}" alt="Event Image">
+            <p><strong>Category:</strong> ${event.category}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    });
+}
+
+// Load resources
+function loadResources() {
+  fetch('/api/resources') // Fetch resources from the backend API
+    .then(res => res.json())
+    .then(resources => {
+      const container = document.getElementById('resourcesContainer');
+      container.innerHTML = ''; // Clear existing content
+      resources.forEach(resource => {
+        let content = '';
+        if (resource.type === 'image') {
+          content = `<img src="${resource.data}" class="img-fluid">`;
+        } else if (resource.type === 'pdf') {
+          content = `<iframe src="${resource.data}"></iframe>`;
+        } else if (resource.type === 'link') {
+          content = `<a href="${resource.data}" target="_blank">${resource.data}</a>`;
+        }
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteResource(${resource.id})">Delete</button>
+            <h5>${resource.title}</h5>
+            ${content}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    });
+}
+
+// Delete student
+function deleteStudent(id) {
+  if (confirm('Are you sure you want to delete this student?')) {
+    fetch(`/api/students/${id}`, { method: 'DELETE' })
+      .then(() => loadStudents()); // Reload students after deletion
+  }
+}
+
+// Delete event
+function deleteEvent(id) {
+  if (confirm('Are you sure you want to delete this event?')) {
+    fetch(`/api/events/${id}`, { method: 'DELETE' })
+      .then(() => loadEvents()); // Reload events after deletion
+  }
+}
+
+// Delete resource
+function deleteResource(id) {
+  if (confirm('Are you sure you want to delete this resource?')) {
+    fetch(`/api/resources/${id}`, { method: 'DELETE' })
+      .then(() => loadResources()); // Reload resources after deletion
+  }
+}
+
+// Load all data when page is ready
+window.onload = function () {
+  loadStudents(); // Load students on page load
+  loadEvents();   // Load events on page load
+  loadResources(); // Load resources on page load
+};
+
+  </script>
+
+</body>
+</html>

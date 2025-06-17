@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Delete Media</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .media-section {
+      margin-bottom: 40px;
+    }
+    .media-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      position: relative;
+    }
+    .media-card img {
+      max-width: 100%;
+      height: auto;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 250px;
+      border: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+ <a class="navbar-brand" href="/home">ALLUMINI</a>
+
+      <a class="navbar-brand" href="/home">home</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resume.html"> Resume</a></li>
+
+
+	 </li>
+         
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Panel - Delete Uploaded Media</h2>
+
+    <!-- Students Section -->
+    <div class="media-section">
+      <h4>Student Entries</h4>
+      <div id="studentsContainer" class="row"></div>
+    </div>
+
+    <!-- Event Images Section -->
+    <div class="media-section">
+      <h4>Event Gallery Images</h4>
+      <div id="eventsContainer" class="row"></div>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="media-section">
+      <h4>Uploaded Resources</h4>
+      <div id="resourcesContainer" class="row"></div>
+    </div>
+  </div>
+
+  <script>
+    function loadStudents() {
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const container = document.getElementById('studentsContainer');
+      container.innerHTML = '';
+      students.forEach((student, index) => {
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteStudent(${index})">Delete</button>
+            <img src="${student.photo}" alt="Student Photo">
+            <p><strong>${student.fullName}</strong></p>
+            <p>${student.email}</p>
+            <p>${student.phone}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function loadEvents() {
+      const images = JSON.parse(localStorage.getItem('eventImages') || '[]');
+      const container = document.getElementById('eventsContainer');
+      container.innerHTML = '';
+      images.forEach((img, index) => {
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteEventImage(${index})">Delete</button>
+            <img src="${img.image}" alt="Event Image">
+            <p><strong>Category:</strong> ${img.category}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function loadResources() {
+      const resources = JSON.parse(localStorage.getItem('resources') || '[]');
+      const container = document.getElementById('resourcesContainer');
+      container.innerHTML = '';
+      resources.forEach((res, index) => {
+        let content = '';
+        if (res.type === 'image') {
+          content = `<img src="${res.data}" class="img-fluid">`;
+        } else if (res.type === 'pdf') {
+          content = `<iframe src="${res.data}"></iframe>`;
+        } else if (res.type === 'link') {
+          content = `<a href="${res.data}" target="_blank">${res.data}</a>`;
+        }
+        const div = document.createElement('div');
+        div.className = 'col-md-4';
+        div.innerHTML = `
+          <div class="media-card">
+            <button class="btn btn-sm btn-danger delete-btn" onclick="deleteResource(${index})">Delete</button>
+            <h5>${res.title}</h5>
+            ${content}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function deleteStudent(index) {
+      let students = JSON.parse(localStorage.getItem('students') || '[]');
+      students.splice(index, 1);
+      localStorage.setItem('students', JSON.stringify(students));
+      loadStudents();
+    }
+
+    function deleteEventImage(index) {
+      let images = JSON.parse(localStorage.getItem('eventImages') || '[]');
+      images.splice(index, 1);
+      localStorage.setItem('eventImages', JSON.stringify(images));
+      loadEvents();
+    }
+
+    function deleteResource(index) {
+      let resources = JSON.parse(localStorage.getItem('resources') || '[]');
+      resources.splice(index, 1);
+      localStorage.setItem('resources', JSON.stringify(resources));
+      loadResources();
+    }
+
+    window.onload = function () {
+      loadStudents();
+      loadEvents();
+      loadResources();
+    };
+  </script>
+</body>
+</html>

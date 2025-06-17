@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat - Alumni Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Full page background and font */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #e3f2fd;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      padding: 15px;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-size: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: #0056b3;
+      border-radius: 4px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #007bff, #6c757d);
+      color: white;
+      text-align: center;
+      padding: 80px 0;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero-section .btn {
+      background-color: #28a745;
+      color: white;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      padding: 12px 30px;
+      margin-top: 20px;
+    }
+
+    /* Chat Box */
+    .chat-box { 
+      border: 1px solid #ddd; 
+      height: 300px; 
+      overflow-y: auto; 
+      padding: 10px; 
+      background: #fafafa; 
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    /* Search results and input styling */
+    .search-result {
+      cursor: pointer;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-result:hover {
+      background-color: #f0f0f0;
+    }
+
+    .input-group input {
+      border-radius: 25px;
+      padding: 15px;
+    }
+
+    .input-group button {
+      border-radius: 25px;
+      padding: 15px 25px;
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/friend.html">Alumni Connect</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="/friend.html">Chat</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resume.html">Resume</a></li>
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    <!-- User Search Section -->
+    <div class="mb-3">
+      <div class="input-group">
+        <input type="text" id="search-user" class="form-control" placeholder="Search users...">
+        <button id="search-btn" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+    <div id="search-results" class="mb-3"></div>
+
+    <h2>Private Chat</h2>
+    <div id="private-chat-header" class="mb-3"></div>
+    <div id="private-chat-box" class="chat-box mb-3"></div>
+    <div class="input-group">
+      <input type="text" id="private-chat-input" class="form-control" placeholder="Type your message...">
+      <button id="send-private-chat-btn" class="btn btn-primary">Send</button>
+    </div>
+  </div>
+
+  <!-- Script for Socket.IO and User Search -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const loggedInUser = sessionStorage.getItem('username');
+    socket.emit('register user', { username: loggedInUser });
+    
+    const target = sessionStorage.getItem('privateChatTarget');
+    document.getElementById('private-chat-header').textContent = target ? `Chat with ${target}` : "Select a user to chat";
+    let privateTarget = target;
+    
+    // Load existing chat history
+    if(privateTarget) {
+      fetch(`/api/privatechats?user1=${loggedInUser}&user2=${privateTarget}`)
+        .then(res => res.json())
+        .then(chats => {
+          const box = document.getElementById('private-chat-box');
+          box.innerHTML = '';
+          chats.forEach(chat => {
+            const div = document.createElement('div');
+            div.textContent = `${chat.sender}: ${chat.message}`;
+            box.appendChild(div);
+          });
+          box.scrollTop = box.scrollHeight;
+        });
+    }
+
+    // Send new private message
+    document.getElementById('send-private-chat-btn').addEventListener('click', () => {
+      const message = document.getElementById('private-chat-input').value;
+      if(privateTarget && message.trim() !== "") {
+        socket.emit('private message', { from: loggedInUser, to: privateTarget, message });
+      }
+      document.getElementById('private-chat-input').value = '';
+    });
+
+    // Listen for incoming private messages
+    socket.on('private message', (data) => {
+      if((data.from === loggedInUser && data.to === privateTarget) || (data.from === privateTarget && data.to === loggedInUser)) {
+        appendPrivateMessage(data.from, data.message);
+      }
+    });
+
+    function appendPrivateMessage(sender, message) {
+      const box = document.getElementById('private-chat-box');
+      const div = document.createElement('div');
+      div.textContent = `${sender}: ${message}`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    // User search functionality
+    document.getElementById('search-btn').addEventListener('click', () => {
+      const query = document.getElementById('search-user').value;
+      fetch(`/search/users?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(users => {
+          const results = document.getElementById('search-results');
+          results.innerHTML = '';
+          users.forEach(user => {
+            const div = document.createElement('div');
+            div.className = 'search-result';
+            div.textContent = `${user.username} (${user.email})`;
+            div.addEventListener('click', () => {
+              sessionStorage.setItem('privateChatTarget', user.username);
+              window.location.href = '/friend';
+            });
+            results.appendChild(div);
+          });
+        });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Alumni Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Full page background and font */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #e3f2fd;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      padding: 15px;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-size: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: #0056b3;
+      border-radius: 4px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #007bff, #6c757d);
+      color: white;
+      text-align: center;
+      padding: 80px 0;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero-section .btn {
+      background-color: #28a745;
+      color: white;
+      font-size: 1.1rem;
+      border-radius: 25px;
+      padding: 12px 30px;
+      margin-top: 20px;
+    }
+
+    /* Blog Container */
+    .blog-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .blog {
+      width: calc(33.33% - 20px);
+      height: 380px;
+      padding: 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .blog:hover {
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .blog h5 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .blog p {
+      flex-grow: 1;
+      font-size: 1rem;
+      color: #555;
+      line-height: 1.6;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+
+    .blog img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .blog .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .blog .actions button {
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 25px;
+      border: none;
+      padding: 8px 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .blog .actions button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Modal and buttons */
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .modal-footer .btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .modal-footer .btn:hover {
+      background-color: #218838;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    /* Search results and input styling */
+    .search-result {
+      cursor: pointer;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-result:hover {
+      background-color: #f0f0f0;
+    }
+
+    .input-group input {
+      border-radius: 25px;
+      padding: 15px;
+    }
+
+    .input-group button {
+      border-radius: 25px;
+      padding: 15px 25px;
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">Alumni Connect</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="/friend.html">Chat</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resume.html">Resume</a></li>
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1>Welcome to Alumni Connect</h1>
+    <p>Your platform for connecting with alumni, creating blogs, and sharing resources.</p>
+    <a href="/event.html" class="btn">Explore Events</a>
+  </div>
+
+  <!-- User Search -->
+  <div class="container mt-4">
+    <div class="mb-3">
+      <div class="input-group">
+        <input type="text" id="search-user" class="form-control" placeholder="Search users...">
+        <button id="search-btn" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+    <div id="search-results" class="mb-3"></div>
+
+    <!-- Blog Section -->
+    <div class="mb-3">
+      <button id="create-blog-btn" class="btn btn-success">Create Blog</button>
+    </div>
+    <div id="blog-list" class="blog-container"></div>
+  </div>
+
+  <!-- Modal for blog creation -->
+  <div class="modal" tabindex="-1" id="create-blog-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Blog</h5>
+          <button type="button" class="btn-close" id="close-blog-modal"></button>
+        </div>
+        <div class="modal-body">
+          <textarea id="blog-content" class="form-control" placeholder="Write your blog..."></textarea>
+          <input type="file" id="blog-image" class="form-control mt-2">
+        </div>
+        <div class="modal-footer">
+          <button id="submit-blog" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const socket = io();
+    const loggedInUser = sessionStorage.getItem('username');
+    socket.emit('register user', { username: loggedInUser });
+    
+    // Load blogs from the backend
+    function loadBlogs() {
+      fetch('/api/blogs')
+        .then(res => res.json())
+        .then(blogs => {
+          const blogList = document.getElementById('blog-list');
+          blogList.innerHTML = '';
+          blogs.forEach(blog => {
+            const div = document.createElement('div');
+            div.className = 'blog';
+            div.innerHTML = `<h5>${blog.username}</h5>
+              <p>${blog.content}</p>
+              ${blog.image ? `<img src="${blog.image}" alt="Blog Image">` : ''}
+              <div>
+                <button class="btn btn-outline-primary btn-sm like-btn" data-id="${blog.id}">Like (<span id="likes-${blog.id}">${blog.likes}</span>)</button>
+              </div>
+              <div class="mt-2" id="comments-${blog.id}"></div>`;
+            blogList.prepend(div);
+          });
+        });
+    }
+    loadBlogs();
+    socket.on('new blog', () => { loadBlogs(); });
+    socket.on('blog updated', (blog) => { document.getElementById(`likes-${blog.id}`).textContent = blog.likes; });
+    socket.on('blog comment', () => { loadBlogs(); });
+    
+    // Blog creation modal
+    const createBlogBtn = document.getElementById('create-blog-btn');
+    const createBlogModal = new bootstrap.Modal(document.getElementById('create-blog-modal'));
+    document.getElementById('close-blog-modal').addEventListener('click', () => { createBlogModal.hide(); });
+    createBlogBtn.addEventListener('click', () => { createBlogModal.show(); });
+    document.getElementById('submit-blog').addEventListener('click', () => {
+      const content = document.getElementById('blog-content').value;
+      const imageInput = document.getElementById('blog-image');
+      if(imageInput.files && imageInput.files[0]) {
+        const formData = new FormData();
+        formData.append('blogImage', imageInput.files[0]);
+        fetch('/upload', { method: 'POST', body: formData })
+          .then(response => response.json())
+          .then(data => {
+            socket.emit('create blog', { username: loggedInUser, content, image: data.url });
+            createBlogModal.hide();
+          })
+          .catch(err => { console.error(err); createBlogModal.hide(); });
+      } else {
+        socket.emit('create blog', { username: loggedInUser, content, image: null });
+        createBlogModal.hide();
+      }
+    });
+    
+    // Like and comment button events
+    document.addEventListener('click', (e) => {
+      if(e.target.classList.contains('like-btn')) {
+        const blogId = e.target.getAttribute('data-id');
+        socket.emit('blog like', { blogId, username: loggedInUser });
+      }
+      if(e.target.classList.contains('comment-btn')) {
+        const blogId = e.target.getAttribute('data-id');
+        const input = document.querySelector(`.comment-input[data-id="${blogId}"]`);
+        const comment = input.value;
+        if(comment.trim() !== "") {
+          socket.emit('blog comment', { blogId, username: loggedInUser, comment });
+        }
+        input.value = '';
+      }
+    });
+    
+    // User search functionality
+    document.getElementById('search-btn').addEventListener('click', () => {
+      const query = document.getElementById('search-user').value;
+      fetch(`/search/users?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(users => {
+          const results = document.getElementById('search-results');
+          results.innerHTML = '';
+          users.forEach(user => {
+            const div = document.createElement('div');
+            div.className = 'search-result';
+            div.textContent = `${user.username} (${user.email})`;
+            div.addEventListener('click', () => {
+              sessionStorage.setItem('privateChatTarget', user.username);
+              window.location.href = '/friend';
+            });
+            results.appendChild(div);
+          });
+        });
+    });
+  </script>
+</body>
+</html>

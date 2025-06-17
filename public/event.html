@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Events - Alumni Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #e3f2fd;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      padding: 15px;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-size: 1rem;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: #0056b3;
+      border-radius: 4px;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #007bff, #6c757d);
+      color: white;
+      text-align: center;
+      padding: 80px 0;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .event-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+	 
+      margin-bottom: 20px;
+    }
+
+    .event-card h5 {
+      font-size: 1.4rem;
+      color: #007bff;
+      margin-bottom: 10px;
+ 
+
+    }
+
+    .event-card p {
+      font-size: 1rem;
+      color: #555;
+
+    }
+    <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .tab-pane img {
+      width: 250px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .tab-pane {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: flex-start;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+    .container {
+      padding-top: 30px;
+    }
+    h3 {
+      font-weight: bold;
+    }
+  
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/home">Alumni Connect</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/event.html">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="/friend.html">Chat</a></li>
+          <li class="nav-item"><a class="nav-link" href="/resume.html">Resume</a></li>
+        </ul>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+      </div>
+    </div>
+  </nav>
+<div class="container">
+  <h3 class="mb-4 text-primary">Event Gallery</h3>
+
+  <form id="photo-upload-form" class="mb-4 shadow p-3 bg-white rounded">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label for="photo-input" class="form-label">Choose Photo</label>
+        <input type="file" class="form-control" id="photo-input" required>
+      </div>
+      <div class="col-md-4">
+        <label for="category-select" class="form-label">Select Category</label>
+        <select id="category-select" class="form-select">
+          <option value="all">All</option>
+          <option value="campus">Campus Life</option>
+          <option value="workshops">Workshops</option>
+          <option value="celebrations">Celebrations</option>
+        </select>
+      </div>
+      <div class="col-md-4 d-grid">
+        <button type="submit" class="btn btn-success mt-4">Upload Photo</button>
+      </div>
+    </div>
+  </form>
+
+  <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="all-tab-btn" data-bs-toggle="tab" data-bs-target="#all-tab" type="button" role="tab">All</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="campus-tab-btn" data-bs-toggle="tab" data-bs-target="#campus-tab" type="button" role="tab">Campus Life</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="workshops-tab-btn" data-bs-toggle="tab" data-bs-target="#workshops-tab" type="button" role="tab">Workshops</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="celebrations-tab-btn" data-bs-toggle="tab" data-bs-target="#celebrations-tab" type="button" role="tab">Celebrations</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4" id="eventTabsContent">
+    <div class="tab-pane fade show active" id="all-tab" role="tabpanel"></div>
+    <div class="tab-pane fade" id="campus-tab" role="tabpanel"></div>
+    <div class="tab-pane fade" id="workshops-tab" role="tabpanel"></div>
+    <div class="tab-pane fade" id="celebrations-tab" role="tabpanel"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const photoForm = document.getElementById('photo-upload-form');
+  const photoInput = document.getElementById('photo-input');
+  const categorySelect = document.getElementById('category-select');
+
+  const allTab = document.getElementById('all-tab');
+  const campusTab = document.getElementById('campus-tab');
+  const workshopsTab = document.getElementById('workshops-tab');
+  const celebrationsTab = document.getElementById('celebrations-tab');
+
+  // Fetch and display photos
+  function loadPhotos() {
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(data => {
+        allTab.innerHTML = '';
+        campusTab.innerHTML = '';
+        workshopsTab.innerHTML = '';
+        celebrationsTab.innerHTML = '';
+
+        data.forEach(photo => {
+          const img = document.createElement('img');
+          img.src = photo.url;
+          img.alt = 'Event Photo';
+
+          // Always add to "all" tab
+          allTab.appendChild(img);
+
+          // Add to specific category tab
+          if (photo.category === 'campus') campusTab.appendChild(img.cloneNode());
+          if (photo.category === 'workshops') workshopsTab.appendChild(img.cloneNode());
+          if (photo.category === 'celebrations') celebrationsTab.appendChild(img.cloneNode());
+        });
+      })
+      .catch(err => console.error('Error loading photos:', err));
+  }
+
+  loadPhotos();
+
+  // Upload new photo
+  photoForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const file = photoInput.files[0];
+    const category = categorySelect.value;
+
+    const formData = new FormData();
+    formData.append('eventPhoto', file);
+    formData.append('category', category);
+
+    fetch('/upload-event', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert('Photo uploaded successfully!');
+      loadPhotos();
+      photoForm.reset();
+    })
+    .catch(err => {
+      console.error('Upload error:', err);
+      alert('Failed to upload photo.');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
+  
+
